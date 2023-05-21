@@ -1,16 +1,13 @@
-// The toposort program prints the nodes of a DAG in topological order.
 package main
 
 import (
 	"fmt"
-	"sort"
 )
 
-//!+table
-// prereqs maps computer science courses to their prerequisites.
-var prereqs = map[string][]string{
-	"algorithms": {"data structures"},
-	"calculus":   {"linear algebra"},
+var prereqs2 = map[string][]string{
+	"algorithms":     {"data structures"},
+	"calculus":       {"linear algebra"},
+	"linear algebra": {"calculus"},
 
 	"compilers": {
 		"data structures",
@@ -27,28 +24,36 @@ var prereqs = map[string][]string{
 	"programming languages": {"data structures", "computer organization"},
 }
 
-//!-table
+// 练习5.10： 重写topoSort函数，用map代替切片并移除对key的排序代码。验证结果的正确性（结果不唯一）。
 
-//!+main
 func main() {
-	for i, course := range topoSort(prereqs) {
+	for i, course := range topoSort2(prereqs2) {
 		fmt.Printf("%d:\t%s\n", i+1, course)
 	}
 }
 
-func topoSort(m map[string][]string) []string {
+func topoSort2(m map[string][]string) []string {
 	var order []string
 	seen := make(map[string]bool)
-	var visitAll func(items []string)
+	var visitAll func(items []string) bool
 
-	visitAll = func(items []string) {
+	visitAll = func(items []string) bool {
 		for _, item := range items {
+
+			for _, v2 := range m[item] {
+				for _, v3 := range m[v2] {
+					if v3 == item {
+						return true
+					}
+				}
+			}
 			if !seen[item] {
 				seen[item] = true
 				visitAll(m[item])
 				order = append(order, item)
 			}
 		}
+		return false
 	}
 
 	var keys []string
@@ -56,7 +61,9 @@ func topoSort(m map[string][]string) []string {
 		keys = append(keys, key)
 	}
 
-	sort.Strings(keys)
-	visitAll(keys)
+	isCircle := visitAll(keys)
+	if isCircle {
+		fmt.Println("there is a circle graph!")
+	}
 	return order
 }

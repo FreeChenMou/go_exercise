@@ -3,11 +3,10 @@ package main
 
 import (
 	"fmt"
-	"sort"
 )
 
 //!+table
-// prereqs maps computer science courses to their prerequisites.
+//exercise5.10 prereqs maps computer science courses to their prerequisites.
 var prereqs = map[string][]string{
 	"algorithms": {"data structures"},
 	"calculus":   {"linear algebra"},
@@ -31,22 +30,23 @@ var prereqs = map[string][]string{
 
 //!+main
 func main() {
-	for i, course := range topoSort(prereqs) {
-		fmt.Printf("%d:\t%s\n", i+1, course)
+	for key, value := range topoSort(prereqs) {
+		fmt.Printf("%d:\t%s\n", key, value)
 	}
 }
 
-func topoSort(m map[string][]string) []string {
-	var order []string
+func topoSort(m map[string][]string) map[int]string {
+	order := make(map[int]string)
 	seen := make(map[string]bool)
 	var visitAll func(items []string)
-
+	index := 1
 	visitAll = func(items []string) {
 		for _, item := range items {
 			if !seen[item] {
 				seen[item] = true
 				visitAll(m[item])
-				order = append(order, item)
+				order[index] = item
+				index++
 			}
 		}
 	}
@@ -56,7 +56,6 @@ func topoSort(m map[string][]string) []string {
 		keys = append(keys, key)
 	}
 
-	sort.Strings(keys)
 	visitAll(keys)
 	return order
 }
