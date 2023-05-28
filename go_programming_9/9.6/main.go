@@ -8,6 +8,7 @@ import (
 )
 
 var wg sync.WaitGroup
+var t int
 
 //exercise9.6 矩阵快速幂
 func main() {
@@ -19,7 +20,6 @@ func main() {
 			matrix[i][j] = j
 		}
 	}
-
 	temp := [1000][1000]int{}
 	for i := 0; i < len(matrix); i++ {
 		for j := 0; j < len(matrix[i]); j++ {
@@ -34,6 +34,6 @@ func main() {
 	}
 	wg.Wait()
 
-	fmt.Printf("%s", time.Since(now))
+	fmt.Printf("%s %d", time.Since(now), t)
 
 }

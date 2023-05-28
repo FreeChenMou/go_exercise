@@ -25,9 +25,9 @@ func handleConn(c net.Conn) {
 
 // 练习 8.1： 修改clock2来支持传入参数作为端口号，然后写一个clockwall的程序，这个程序可以同时与多个clock服务器通信，
 
-// go run .\main.go Tokyo=localhost:8010 London=localhost:8020
-// go run .\main.go -port 8020 -timezone Europe/London
-// go run .\main.go -port 8010
+// go run .\eval.go Tokyo=localhost:8010 London=localhost:8020
+// go run .\eval.go -port 8020 -timezone Europe/London
+// go run .\eval.go -port 8010
 
 var port = flag.String("port", "8000", "服务端口")
 var timezone = flag.String("timezone", "Asia/Tokyo", "时区") //默认时区是Tokyo
